@@ -20,26 +20,35 @@
                 $imports = $this->grav['page']->header()->imports;
                 $parsed = [];
 
-                if (is_array($imports)) {
-                    foreach ($imports as $import) {
-                        if (Utils::endswith($import, '.yaml')) {
-                            $key = basename($import, '.yaml');
-                            $parsed[$key] = Yaml::parse($this->getContents($import));
-                        } elseif (Utils::endswith($import, '.json')) {
-                            $key = basename($import, '.json');
-                            $parsed[$key] = json_decode($this->getContents($import), true);
-                        }
-                    }
-                } else {
-                    $import = $imports;
-                    if (Utils::endswith($import, '.yaml')) {
-                        $parsed = Yaml::parse($this->getContents($import));
-                    } elseif (Utils::endswith($import, '.json')) {
-                        $parsed = json_decode($this->getContents($import), true);
-                    }
-                }
+                  if (is_array($imports)) {
+                      foreach ($imports as $import) {
+                        //check if file is present
+                        if(in_array($import,$this->grav['page']->media()->files())){
 
-                $this->grav['page']->header()->imports = $parsed;
+                          if (Utils::endswith($import, '.yaml')) {
+                              $key = basename($import, '.yaml');
+                              $parsed[$key] = Yaml::parse($this->getContents($import));
+                          } elseif (Utils::endswith($import, '.json')) {
+                              $key = basename($import, '.json');
+                              $parsed[$key] = json_decode($this->getContents($import), true);
+                          }
+                        }
+                      }
+                  } else {
+                      $import = $imports;
+                      //check if file is present
+                      if(in_array($import,$this->grav['page']->media()->files())){
+
+                        if (Utils::endswith($import, '.yaml')) {
+                            $parsed = Yaml::parse($this->getContents($import));
+                        } elseif (Utils::endswith($import, '.json')) {
+                            $parsed = json_decode($this->getContents($import), true);
+                        }
+                      }
+                  }
+
+                  $this->grav['page']->header()->imports = $parsed;
+
             }
         }
 
