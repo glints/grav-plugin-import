@@ -23,7 +23,7 @@
                   if (is_array($imports)) {
                       foreach ($imports as $import) {
                         //check if file is present
-                        if(in_array($import,$this->grav['page']->media()->files())){
+                        if(array_key_exists($import,$this->grav['page']->media()->files())){
 
                           if (Utils::endswith($import, '.yaml')) {
                               $key = basename($import, '.yaml');
@@ -37,8 +37,7 @@
                   } else {
                       $import = $imports;
                       //check if file is present
-                      if(in_array($import,$this->grav['page']->media()->files())){
-
+                      if(array_key_exists($import,$this->grav['page']->media()->files())){
                         if (Utils::endswith($import, '.yaml')) {
                             $parsed = Yaml::parse($this->getContents($import));
                         } elseif (Utils::endswith($import, '.json')) {
@@ -47,7 +46,10 @@
                       }
                   }
 
-                  $this->grav['page']->header()->imports = $parsed;
+                  if(!empty($parsed)){
+                    $this->grav['page']->header()->imports = $parsed;
+                  }
+
 
             }
         }
